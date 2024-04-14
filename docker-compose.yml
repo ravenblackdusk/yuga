@@ -1,0 +1,8 @@
+services:
+  yugabyte:
+    image: yugabytedb/yugabyte
+    volumes:
+      - ./yb_data:/home/yugabyte/yb_data
+    entrypoint: ["bin/yugabyted", "start", "--base_dir=/home/yugabyte/yb_data", "--background=false"]
+    ports:
+      - "5433:5433"
