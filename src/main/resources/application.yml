@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: jdbc:yugabytedb://localhost:5433/postgres
+    username: yugabyte
+    password: yugabyte
+    driver-class-name: com.yugabyte.Driver

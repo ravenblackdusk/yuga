@@ -4,24 +4,31 @@
 package org.jooq.generated.tables;
 
 
-import java.util.function.Function;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
+import org.jooq.Condition;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function3;
 import org.jooq.Identity;
+import org.jooq.InverseForeignKey;
 import org.jooq.Name;
+import org.jooq.Path;
+import org.jooq.PlainSQL;
+import org.jooq.QueryPart;
 import org.jooq.Record;
-import org.jooq.Records;
-import org.jooq.Row3;
+import org.jooq.SQL;
 import org.jooq.Schema;
-import org.jooq.SelectField;
+import org.jooq.Select;
+import org.jooq.Stringly;
 import org.jooq.Table;
 import org.jooq.TableField;
 import org.jooq.TableOptions;
 import org.jooq.UniqueKey;
 import org.jooq.generated.Keys;
 import org.jooq.generated.Public;
+import org.jooq.generated.tables.Foo.FooPath;
 import org.jooq.generated.tables.records.BarRecord;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
@@ -50,38 +57,26 @@ public class Bar extends TableImpl<BarRecord> {
     }
 
     /**
-     * @deprecated Unknown data type. If this is a qualified, user-defined type,
-     * it may have been excluded from code generation. If this is a built-in
-     * type, you can define an explicit {@link org.jooq.Binding} to specify how
-     * this type should be handled. Deprecation can be turned off using
-     * {@literal <deprecationOnUnknownTypes/>} in your code generator
-     * configuration.
+     * The column <code>public.bar.id</code>.
      */
-    @Deprecated
-    public final TableField<BarRecord, Object> ID = createField(DSL.name("id"), SQLDataType.OTHER.nullable(false).identity(true), this, "");
+    public final TableField<BarRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>public.bar.name</code>.
      */
-    public final TableField<BarRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(2147483647).nullable(false), this, "");
+    public final TableField<BarRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     /**
-     * @deprecated Unknown data type. If this is a qualified, user-defined type,
-     * it may have been excluded from code generation. If this is a built-in
-     * type, you can define an explicit {@link org.jooq.Binding} to specify how
-     * this type should be handled. Deprecation can be turned off using
-     * {@literal <deprecationOnUnknownTypes/>} in your code generator
-     * configuration.
+     * The column <code>public.bar.foo_id</code>.
      */
-    @Deprecated
-    public final TableField<BarRecord, Object> FOO_ID = createField(DSL.name("foo_id"), SQLDataType.OTHER.nullable(false), this, "");
+    public final TableField<BarRecord, Long> FOO_ID = createField(DSL.name("foo_id"), SQLDataType.BIGINT.nullable(false), this, "");
 
     private Bar(Name alias, Table<BarRecord> aliased) {
-        this(alias, aliased, null);
+        this(alias, aliased, (Field<?>[]) null, null);
     }
 
-    private Bar(Name alias, Table<BarRecord> aliased, Field<?>[] parameters) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
+    private Bar(Name alias, Table<BarRecord> aliased, Field<?>[] parameters, Condition where) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
     }
 
     /**
@@ -105,8 +100,37 @@ public class Bar extends TableImpl<BarRecord> {
         this(DSL.name("bar"), null);
     }
 
-    public <O extends Record> Bar(Table<O> child, ForeignKey<O, BarRecord> key) {
-        super(child, key, BAR);
+    public <O extends Record> Bar(Table<O> path, ForeignKey<O, BarRecord> childPath, InverseForeignKey<O, BarRecord> parentPath) {
+        super(path, childPath, parentPath, BAR);
+    }
+
+    /**
+     * A subtype implementing {@link Path} for simplified path-based joins.
+     */
+    public static class BarPath extends Bar implements Path<BarRecord> {
+
+        private static final long serialVersionUID = 1L;
+        public <O extends Record> BarPath(Table<O> path, ForeignKey<O, BarRecord> childPath, InverseForeignKey<O, BarRecord> parentPath) {
+            super(path, childPath, parentPath);
+        }
+        private BarPath(Name alias, Table<BarRecord> aliased) {
+            super(alias, aliased);
+        }
+
+        @Override
+        public BarPath as(String alias) {
+            return new BarPath(DSL.name(alias), this);
+        }
+
+        @Override
+        public BarPath as(Name alias) {
+            return new BarPath(alias, this);
+        }
+
+        @Override
+        public BarPath as(Table<?> alias) {
+            return new BarPath(alias.getQualifiedName(), this);
+        }
     }
 
     @Override
@@ -114,23 +138,31 @@ public class Bar extends TableImpl<BarRecord> {
         return aliased() ? null : Public.PUBLIC;
     }
 
-    /**
-     * @deprecated Unknown data type. If this is a qualified, user-defined type,
-     * it may have been excluded from code generation. If this is a built-in
-     * type, you can define an explicit {@link org.jooq.Binding} to specify how
-     * this type should be handled. Deprecation can be turned off using
-     * {@literal <deprecationOnUnknownTypes/>} in your code generator
-     * configuration.
-     */
-    @Deprecated
     @Override
-    public Identity<BarRecord, Object> getIdentity() {
-        return (Identity<BarRecord, Object>) super.getIdentity();
+    public Identity<BarRecord, Long> getIdentity() {
+        return (Identity<BarRecord, Long>) super.getIdentity();
     }
 
     @Override
     public UniqueKey<BarRecord> getPrimaryKey() {
-        return Keys.PK_BAR;
+        return Keys.BAR_PKEY;
+    }
+
+    @Override
+    public List<ForeignKey<BarRecord, ?>> getReferences() {
+        return Arrays.asList(Keys.BAR__BAR_FOO_ID_FK);
+    }
+
+    private transient FooPath _foo;
+
+    /**
+     * Get the implicit join path to the <code>public.foo</code> table.
+     */
+    public FooPath foo() {
+        if (_foo == null)
+            _foo = new FooPath(this, Keys.BAR__BAR_FOO_ID_FK, null);
+
+        return _foo;
     }
 
     @Override
@@ -172,27 +204,87 @@ public class Bar extends TableImpl<BarRecord> {
         return new Bar(name.getQualifiedName(), null);
     }
 
-    // -------------------------------------------------------------------------
-    // Row3 type methods
-    // -------------------------------------------------------------------------
-
+    /**
+     * Create an inline derived table from this table
+     */
     @Override
-    public Row3<Object, String, Object> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Bar where(Condition condition) {
+        return new Bar(getQualifiedName(), aliased() ? this : null, null, condition);
     }
 
     /**
-     * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
+     * Create an inline derived table from this table
      */
-    public <U> SelectField<U> mapping(Function3<? super Object, ? super String, ? super Object, ? extends U> from) {
-        return convertFrom(Records.mapping(from));
+    @Override
+    public Bar where(Collection<? extends Condition> conditions) {
+        return where(DSL.and(conditions));
     }
 
     /**
-     * Convenience mapping calling {@link SelectField#convertFrom(Class,
-     * Function)}.
+     * Create an inline derived table from this table
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function3<? super Object, ? super String, ? super Object, ? extends U> from) {
-        return convertFrom(toType, Records.mapping(from));
+    @Override
+    public Bar where(Condition... conditions) {
+        return where(DSL.and(conditions));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Bar where(Field<Boolean> condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Bar where(SQL condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Bar where(@Stringly.SQL String condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Bar where(@Stringly.SQL String condition, Object... binds) {
+        return where(DSL.condition(condition, binds));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Bar where(@Stringly.SQL String condition, QueryPart... parts) {
+        return where(DSL.condition(condition, parts));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Bar whereExists(Select<?> select) {
+        return where(DSL.exists(select));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Bar whereNotExists(Select<?> select) {
+        return where(DSL.notExists(select));
     }
 }

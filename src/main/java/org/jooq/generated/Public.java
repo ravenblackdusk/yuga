@@ -10,13 +10,7 @@ import java.util.List;
 import org.jooq.Catalog;
 import org.jooq.Table;
 import org.jooq.generated.tables.Bar;
-import org.jooq.generated.tables.BarIdSeq;
-import org.jooq.generated.tables.BarPkey;
-import org.jooq.generated.tables.FlywaySchemaHistoryPkey;
-import org.jooq.generated.tables.FlywaySchemaHistorySIdx;
 import org.jooq.generated.tables.Foo;
-import org.jooq.generated.tables.FooIdSeq;
-import org.jooq.generated.tables.FooPkey;
 import org.jooq.impl.SchemaImpl;
 
 
@@ -39,39 +33,9 @@ public class Public extends SchemaImpl {
     public final Bar BAR = Bar.BAR;
 
     /**
-     * The table <code>public.bar_id_seq</code>.
-     */
-    public final BarIdSeq BAR_ID_SEQ = BarIdSeq.BAR_ID_SEQ;
-
-    /**
-     * The table <code>public.bar_pkey</code>.
-     */
-    public final BarPkey BAR_PKEY = BarPkey.BAR_PKEY;
-
-    /**
-     * The table <code>public.flyway_schema_history_pkey</code>.
-     */
-    public final FlywaySchemaHistoryPkey FLYWAY_SCHEMA_HISTORY_PKEY = FlywaySchemaHistoryPkey.FLYWAY_SCHEMA_HISTORY_PKEY;
-
-    /**
-     * The table <code>public.flyway_schema_history_s_idx</code>.
-     */
-    public final FlywaySchemaHistorySIdx FLYWAY_SCHEMA_HISTORY_S_IDX = FlywaySchemaHistorySIdx.FLYWAY_SCHEMA_HISTORY_S_IDX;
-
-    /**
      * The table <code>public.foo</code>.
      */
     public final Foo FOO = Foo.FOO;
-
-    /**
-     * The table <code>public.foo_id_seq</code>.
-     */
-    public final FooIdSeq FOO_ID_SEQ = FooIdSeq.FOO_ID_SEQ;
-
-    /**
-     * The table <code>public.foo_pkey</code>.
-     */
-    public final FooPkey FOO_PKEY = FooPkey.FOO_PKEY;
 
     /**
      * No further instances allowed
@@ -90,13 +54,7 @@ public class Public extends SchemaImpl {
     public final List<Table<?>> getTables() {
         return Arrays.asList(
             Bar.BAR,
-            BarIdSeq.BAR_ID_SEQ,
-            BarPkey.BAR_PKEY,
-            FlywaySchemaHistoryPkey.FLYWAY_SCHEMA_HISTORY_PKEY,
-            FlywaySchemaHistorySIdx.FLYWAY_SCHEMA_HISTORY_S_IDX,
-            Foo.FOO,
-            FooIdSeq.FOO_ID_SEQ,
-            FooPkey.FOO_PKEY
+            Foo.FOO
         );
     }
 }

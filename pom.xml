@@ -15,8 +15,20 @@
 
     <properties>
         <jdbc-yugabytedb.version>42.3.5-yb-4</jdbc-yugabytedb.version>
-        <flyway.version>10.11.0</flyway.version>
+        <flyway.version>10.11.0<!-- remove this after spring update --></flyway.version>
+        <jooq.version>3.19.7<!-- remove this after spring update --></jooq.version>
+        <mapstruct.version>1.5.5.Final</mapstruct.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq</artifactId>
+                <version>${jooq.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -38,6 +50,11 @@
             <artifactId>flyway-database-yugabytedb</artifactId>
             <version>${flyway.version}</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
         </dependency>
     </dependencies>
 
@@ -84,6 +101,18 @@
                             <directory>src/main/java/</directory>
                         </target>
                     </generator>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>
