@@ -1,4 +1,6 @@
 package com.example.bar;
 
-record BarCreation(String name, long fooId) {
+import com.example.foo.Foo;
+
+record BarCreation(String name, Foo foo) {
 }

@@ -1,4 +1,4 @@
 package com.example.foo;
 
-record FooCreation(String name) {
+public record FooCreation(String name) {
 }

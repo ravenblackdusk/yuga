@@ -1,13 +1,14 @@
 package com.example.bar;
 
 import org.jooq.DSLContext;
-import org.jooq.impl.DSL;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 import static com.example.bar.BarMapper.MAPPER;
 import static org.jooq.generated.tables.Bar.BAR;
+import static org.jooq.generated.tables.Foo.FOO;
+import static org.jooq.impl.DSL.noCondition;
 
 @RequestMapping("/bar")
 @RestController
@@ -25,7 +26,7 @@ class BarResource {
 
     @GetMapping
     List<Bar> find(Long id, String name, Long fooId) {
-        var condition = DSL.noCondition();
+        var condition = noCondition();
         if (id != null) {
             condition = condition.and(BAR.ID.eq(id));
         }
@@ -35,12 +36,12 @@ class BarResource {
         if (fooId != null) {
             condition = condition.and(BAR.FOO_ID.eq(fooId));
         }
-        return dslContext.selectFrom(BAR).where(condition).fetch().map(MAPPER::toBar);
+        return dslContext.selectFrom(BAR.innerJoin(FOO).onKey()).where(condition).fetch(MAPPER::toBar);
     }
 
     @GetMapping("/{id}")
     Bar get(@PathVariable long id) {
-        return MAPPER.toBar(dslContext.selectFrom(BAR).where(BAR.ID.eq(id)).fetchOne());
+        return dslContext.selectFrom(BAR.innerJoin(FOO).onKey()).where(BAR.ID.eq(id)).fetchOne(MAPPER::toBar);
     }
 
     @PutMapping("/{id}")
